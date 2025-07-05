@@ -35,7 +35,8 @@ const sampleProducts = [
     rating: { average: 4.2, count: 1204 },
     isNewProduct: true,
     isFeatured: true,
-    tags: ['casual', 'cotton', 'shirt', 'men']
+    tags: ['casual', 'cotton', 'shirt', 'men'],
+    isActive: true
   },
   {
     name: 'Floral Summer Dress',
@@ -60,7 +61,8 @@ const sampleProducts = [
     rating: { average: 4.5, count: 856 },
     isBestseller: true,
     isFeatured: true,
-    tags: ['dress', 'floral', 'summer', 'women']
+    tags: ['dress', 'floral', 'summer', 'women'],
+    isActive: true
   },
   {
     name: 'Kids Rainbow T-Shirt',
@@ -85,7 +87,8 @@ const sampleProducts = [
     stock: 25,
     rating: { average: 4.7, count: 432 },
     isNewProduct: true,
-    tags: ['kids', 'tshirt', 'rainbow', 'cotton']
+    tags: ['kids', 'tshirt', 'rainbow', 'cotton'],
+    isActive: true
   },
   {
     name: 'Leather Formal Shoes',
@@ -108,7 +111,8 @@ const sampleProducts = [
     ],
     stock: 15,
     rating: { average: 4.3, count: 298 },
-    tags: ['shoes', 'formal', 'leather', 'men']
+    tags: ['shoes', 'formal', 'leather', 'men'],
+    isActive: true
   },
   {
     name: 'Designer Handbag',
@@ -134,7 +138,8 @@ const sampleProducts = [
     rating: { average: 4.6, count: 672 },
     isBestseller: true,
     isFeatured: true,
-    tags: ['handbag', 'designer', 'leather', 'women', 'accessories']
+    tags: ['handbag', 'designer', 'leather', 'women', 'accessories'],
+    isActive: true
   },
   {
     name: 'Sports Sneakers',
@@ -160,7 +165,8 @@ const sampleProducts = [
     rating: { average: 4.4, count: 1890 },
     isNewProduct: true,
     isFeatured: true,
-    tags: ['sneakers', 'sports', 'running', 'nike']
+    tags: ['sneakers', 'sports', 'running', 'nike'],
+    isActive: true
   },
   {
     name: 'Denim Jacket',
@@ -184,7 +190,8 @@ const sampleProducts = [
     ],
     stock: 20,
     rating: { average: 4.1, count: 543 },
-    tags: ['jacket', 'denim', 'casual', 'men']
+    tags: ['jacket', 'denim', 'casual', 'men'],
+    isActive: true
   },
   {
     name: 'Silk Scarf',
@@ -209,7 +216,8 @@ const sampleProducts = [
     stock: 5,
     rating: { average: 4.8, count: 234 },
     isBestseller: true,
-    tags: ['scarf', 'silk', 'luxury', 'women', 'accessories']
+    tags: ['scarf', 'silk', 'luxury', 'women', 'accessories'],
+    isActive: true
   },
   // Additional products to reach 12 items
   {
@@ -235,7 +243,8 @@ const sampleProducts = [
     stock: 35,
     rating: { average: 4.6, count: 987 },
     isNewProduct: true,
-    tags: ['leggings', 'yoga', 'activewear', 'women']
+    tags: ['leggings', 'yoga', 'activewear', 'women'],
+    isActive: true
   },
   {
     name: 'Wireless Earbuds',
@@ -260,7 +269,8 @@ const sampleProducts = [
     rating: { average: 4.7, count: 1543 },
     isBestseller: true,
     isFeatured: true,
-    tags: ['earbuds', 'wireless', 'audio', 'technology']
+    tags: ['earbuds', 'wireless', 'audio', 'technology'],
+    isActive: true
   },
   {
     name: 'Skincare Set',
@@ -283,7 +293,8 @@ const sampleProducts = [
     stock: 15,
     rating: { average: 4.5, count: 678 },
     isNewProduct: true,
-    tags: ['skincare', 'beauty', 'routine', 'natural']
+    tags: ['skincare', 'beauty', 'routine', 'natural'],
+    isActive: true
   },
   {
     name: 'Gaming Chair',
@@ -307,7 +318,8 @@ const sampleProducts = [
     stock: 8,
     rating: { average: 4.4, count: 234 },
     isFeatured: true,
-    tags: ['chair', 'gaming', 'ergonomic', 'furniture']
+    tags: ['chair', 'gaming', 'ergonomic', 'furniture'],
+    isActive: true
   }
 ];
 
@@ -320,7 +332,6 @@ const adminUser = {
   avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg'
 };
 
-// Sample regular user
 const regularUser = {
   name: 'John Doe',
   email: 'john@example.com',
@@ -331,56 +342,40 @@ const regularUser = {
 
 const seedDatabase = async () => {
   try {
-    // Connect to MongoDB
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/myntra-clone');
+    await mongoose.connect(process.env.MONGODB_URI, {
+      retryWrites: true,
+      w: 'majority'
+    });
     console.log('✅ Connected to MongoDB');
 
-    // Clear existing data
-    console.log('🧹 Clearing existing data...');
+    console.log('🧹 Clearing old users and products...');
     await User.deleteMany({});
     await Product.deleteMany({});
 
-    // Create admin user
-    console.log('👤 Creating admin user...');
     const hashedAdminPassword = await bcrypt.hash(adminUser.password, 12);
-    const admin = new User({
-      ...adminUser,
-      password: hashedAdminPassword
-    });
-    await admin.save();
+    const admin = await User.create({ ...adminUser, password: hashedAdminPassword });
 
-    // Create regular user
-    console.log('👤 Creating regular user...');
     const hashedUserPassword = await bcrypt.hash(regularUser.password, 12);
-    const user = new User({
-      ...regularUser,
-      password: hashedUserPassword
-    });
-    await user.save();
+    await User.create({ ...regularUser, password: hashedUserPassword });
 
-    // Create products
-    console.log('📦 Creating products...');
-    const products = [];
-    for (const productData of sampleProducts) {
-      const product = new Product({
-        ...productData,
-        createdBy: admin._id
-      });
-      products.push(product);
-    }
-    await Product.insertMany(products);
+    console.log('👤 Users seeded');
 
-    console.log('✅ Database seeded successfully!');
-    console.log(`📊 Created ${products.length} products`);
-    console.log('👤 Admin credentials: admin@myntra.com / admin123');
-    console.log('👤 User credentials: john@example.com / password123');
+    const productsToInsert = sampleProducts.map((product) => ({
+      ...product,
+      createdBy: admin._id
+    }));
 
-    process.exit(0);
-  } catch (error) {
-    console.error('❌ Error seeding database:', error);
+    await Product.insertMany(productsToInsert);
+    console.log(`📦 ${productsToInsert.length} products seeded successfully`);
+
+    console.log('✅ Done!');
+    console.log('👤 Admin Login → Email: admin@myntra.com | Password: admin123');
+    console.log('👤 User Login  → Email: john@example.com | Password: password123');
+    process.exit();
+  } catch (err) {
+    console.error('❌ Error seeding database:', err);
     process.exit(1);
   }
 };
 
-// Run the seed function
 seedDatabase();
