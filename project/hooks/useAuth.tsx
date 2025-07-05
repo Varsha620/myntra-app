@@ -60,10 +60,9 @@ interface SignupData {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// API configuration
+// API configuration - Updated to use deployed backend
 const getApiBaseUrl = () => {
-  // Always use localhost for development
-  return 'http://localhost:5000/api';
+  return 'https://myntra-app-production.up.railway.app/api';
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -185,7 +184,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error('❌ Login error:', err);
       Alert.alert(
         'Network Error', 
-        'Could not connect to the server. Please make sure the backend is running and try again.'
+        'Could not connect to the server. Please make sure you have an internet connection and try again.'
       );
       return false;
     }
@@ -262,7 +261,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return false;
     } catch (err) {
       console.error('❌ Signup error:', err);
-      Alert.alert('Network Error', 'Please check your connection and make sure the backend is running.');
+      Alert.alert('Network Error', 'Please check your connection and try again.');
       return false;
     }
   };

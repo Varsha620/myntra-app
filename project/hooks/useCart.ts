@@ -31,10 +31,7 @@ const setStorageValue = async (key: string, value: string): Promise<void> => {
 };
 
 const getApiBaseUrl = () => {
-  if (Platform.OS === 'web') {
-    return 'http://localhost:5000/api';
-  }
-  return 'http://192.168.1.100:5000/api';
+  return 'https://myntra-app-production.up.railway.app/api';
 };
 
 const getAuthToken = async (): Promise<string | null> => {

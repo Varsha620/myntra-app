@@ -3,9 +3,11 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { useFonts, Inter_400Regular, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
-import { SplashScreen } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { AuthProvider } from '@/hooks/useAuth';
+import { View, Text } from 'react-native';
 
+// Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -19,12 +21,19 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
+      // Hide the splash screen after the fonts have loaded (or an error was returned) and the UI is ready.
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontError]);
 
+  // Prevent rendering until the font has loaded or an error was returned
   if (!fontsLoaded && !fontError) {
-    return null;
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#E91E63' }}>
+        <Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>Myntra</Text>
+        <Text style={{ color: 'white', fontSize: 12, marginTop: 8 }}>Loading...</Text>
+      </View>
+    );
   }
 
   return (
