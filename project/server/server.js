@@ -126,7 +126,7 @@ const startServer = async () => {
     // If MongoDB connection fails, still start server for debugging
     if (error.name === 'MongoNetworkError' || error.name === 'MongooseServerSelectionError') {
       console.log('⚠️  Starting server without MongoDB connection for debugging...');
-      const PORT = process.env.PORT || 5000;
+      const PORT = process.env.PORT || 8080;
       const HOST = '0.0.0.0';
       
       app.listen(PORT, HOST, () => {
