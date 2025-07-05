@@ -7,6 +7,10 @@ const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 require('dotenv').config();
 
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
+
+
 // Import routes
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
