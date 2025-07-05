@@ -22,11 +22,9 @@ import { Platform } from 'react-native';
 const { width: screenWidth } = Dimensions.get('window');
 
 const getApiBaseUrl = () => {
-  const isProd = true; // Set to false for local testing
-  return isProd
-    ? 'https://myntra-app-production.up.railway.app/api'
-    : 'http://192.168.1.100:5000/api';
+  return 'https://myntra-app-production.up.railway.app/api';
 };
+
 
 
 export default function ProductDetailScreen() {

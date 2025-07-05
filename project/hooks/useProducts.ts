@@ -3,9 +3,8 @@ import { Platform } from 'react-native';
 import { Product, FilterOptions } from '@/types';
 
 // Standardized API base URL
-const API_BASE_URL = Platform.OS === 'web' 
-  ? 'http://localhost:5000/api' 
-  : 'http://192.168.1.100:5000/api';
+const API_BASE_URL = 'https://myntra-app-production.up.railway.app/api';
+
 
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
