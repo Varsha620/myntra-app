@@ -99,7 +99,7 @@ const startServer = async () => {
   try {
     // Connect to MongoDB
     console.log('🔄 Connecting to MongoDB...');
-    await mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://stuvspro:<#CrackiT>@cluster0.1acee.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+    await mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://stuvspro:<%23CrackiT>@cluster0.1acee.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
       retryWrites: true,
       w: 'majority'
     });
