@@ -275,4 +275,4 @@ productSchema.statics.applySorting = function(query, sortBy = 'popularity') {
   }
 };
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model('Product', productSchema,'products'); // Explicitly specify collection name

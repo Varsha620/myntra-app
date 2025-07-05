@@ -272,4 +272,4 @@ userSchema.methods.moveToCart = function(productId, size, color) {
   return this.save();
 };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema, 'users'); // Explicitly specify collection name
