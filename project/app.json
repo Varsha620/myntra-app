@@ -1,15 +1,30 @@
 {
   "expo": {
-    "name": "bolt-expo-nativewind",
+    "name": "Myntra Clone",
     "slug": "bolt-expo-nativewind",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "myntra",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "platforms": ["ios", "android", "web"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.myntraclone.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#E91E63"
+      },
+      "package": "com.myntraclone.app",
+      "versionCode": 2,
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ],
+      "allowBackup": false
     },
     "web": {
       "bundler": "metro",
@@ -31,8 +46,10 @@
         "projectId": "7b83e013-ab63-4292-94dd-08233f5cd2ab"
       }
     },
-    "android": {
-      "package": "com.varsha620.boltexponativewind"
+    "splash": {
+      "image": "./assets/images/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#E91E63"
     }
   }
 }

@@ -11,9 +11,27 @@ interface Storage {
 
 // Web storage implementation
 const webStorage: Storage = {
-  getItem: async (key: string) => localStorage.getItem(key),
-  setItem: async (key: string, value: string) => localStorage.setItem(key, value),
-  deleteItem: async (key: string) => localStorage.removeItem(key),
+  getItem: async (key: string) => {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  setItem: async (key: string, value: string) => {
+    try {
+      localStorage.setItem(key, value);
+    } catch {
+      // Ignore storage errors
+    }
+  },
+  deleteItem: async (key: string) => {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      // Ignore storage errors
+    }
+  },
 };
 
 // Native storage implementation
@@ -22,9 +40,27 @@ if (Platform.OS !== 'web') {
   try {
     const SecureStore = require('expo-secure-store');
     nativeStorage = {
-      getItem: SecureStore.getItemAsync,
-      setItem: SecureStore.setItemAsync,
-      deleteItem: SecureStore.deleteItemAsync,
+      getItem: async (key: string) => {
+        try {
+          return await SecureStore.getItemAsync(key);
+        } catch {
+          return null;
+        }
+      },
+      setItem: async (key: string, value: string) => {
+        try {
+          await SecureStore.setItemAsync(key, value);
+        } catch {
+          // Ignore storage errors
+        }
+      },
+      deleteItem: async (key: string) => {
+        try {
+          await SecureStore.deleteItemAsync(key);
+        } catch {
+          // Ignore storage errors
+        }
+      },
     };
   } catch (error) {
     console.warn('SecureStore not available, falling back to web storage');
@@ -85,12 +121,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const API_BASE_URL = getApiBaseUrl();
       console.log('🔄 Checking stored auth token...');
       
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
       const res = await fetch(`${API_BASE_URL}/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!res.ok) {
         console.log('❌ Stored token invalid, removing...');
@@ -132,6 +174,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const API_BASE_URL = getApiBaseUrl();
       console.log('🔐 Attempting login to:', `${API_BASE_URL}/auth/login`);
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
@@ -141,8 +186,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           email: email.trim().toLowerCase(),
           password: password.trim()
         }),
+        signal: controller.signal,
       });
 
+      clearTimeout(timeoutId);
       console.log('📡 Login response status:', response.status);
       
       if (!response.ok) {
@@ -180,12 +227,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       Alert.alert('Error', 'Login failed. Please try again.');
       return false;
-    } catch (err) {
+    } catch (err: any) {
       console.error('❌ Login error:', err);
-      Alert.alert(
-        'Network Error', 
-        'Could not connect to the server. Please make sure you have an internet connection and try again.'
-      );
+      if (err.name === 'AbortError') {
+        Alert.alert('Timeout', 'Request timed out. Please check your connection and try again.');
+      } else {
+        Alert.alert(
+          'Network Error', 
+          'Could not connect to the server. Please make sure you have an internet connection and try again.'
+        );
+      }
       return false;
     }
   };
@@ -205,6 +256,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const API_BASE_URL = getApiBaseUrl();
       console.log('📝 Attempting signup to:', `${API_BASE_URL}/auth/register`);
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
@@ -216,8 +270,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           password: data.password.trim(),
           name: data.name.trim()
         }),
+        signal: controller.signal,
       });
 
+      clearTimeout(timeoutId);
       console.log('📡 Signup response status:', response.status);
       
       if (!response.ok) {
@@ -259,9 +315,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       Alert.alert('Error', 'Signup failed. Please try again.');
       return false;
-    } catch (err) {
+    } catch (err: any) {
       console.error('❌ Signup error:', err);
-      Alert.alert('Network Error', 'Please check your connection and try again.');
+      if (err.name === 'AbortError') {
+        Alert.alert('Timeout', 'Request timed out. Please check your connection and try again.');
+      } else {
+        Alert.alert('Network Error', 'Please check your connection and try again.');
+      }
       return false;
     }
   };
@@ -272,13 +332,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (token) {
         const API_BASE_URL = getApiBaseUrl();
         try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
           await fetch(`${API_BASE_URL}/auth/logout`, {
             method: 'POST',
             headers: {
               Authorization: `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
+            signal: controller.signal,
           });
+
+          clearTimeout(timeoutId);
         } catch (logoutError) {
           console.error('Logout API error:', logoutError);
         }

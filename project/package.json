@@ -5,9 +5,15 @@
   "private": true,
   "scripts": {
     "dev": "EXPO_NO_TELEMETRY=1 expo start",
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
     "build:web": "expo export --platform web",
-    "build:android": "eas build --platform android",
-    "build:ios": "eas build --platform ios",
+    "build:android": "eas build --platform android --profile preview",
+    "build:android-prod": "eas build --platform android --profile production",
+    "build:ios": "eas build --platform ios --profile preview",
+    "build:ios-prod": "eas build --platform ios --profile production",
     "lint": "expo lint"
   },
   "dependencies": {
@@ -35,6 +41,7 @@
     "lucide-react-native": "^0.475.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-error-boundary": "^4.1.2",
     "react-native": "0.79.1",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-reanimated": "~3.17.4",

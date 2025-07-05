@@ -110,7 +110,7 @@ const startServer = async () => {
     console.log('✅ Connected to MongoDB');
 
     // Start server
-    const PORT = process.env.PORT || 5000;
+    const PORT = process.env.PORT || 8080;
     const HOST = '0.0.0.0'; // Listen on all interfaces
     
     app.listen(PORT, HOST, () => {
