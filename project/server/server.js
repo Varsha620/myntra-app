@@ -111,9 +111,12 @@ const startServer = async () => {
 
     // Start server
     const PORT = process.env.PORT;
+        console.log("💥 Railway ENV PORT:", process.env.PORT);
     if (!PORT) {
       throw new Error("❌ Railway did not provide a PORT. Exiting.");
     }
+
+
 
     const HOST = '0.0.0.0'; // Listen on all interfaces
     
