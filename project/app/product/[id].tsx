@@ -22,11 +22,12 @@ import { Platform } from 'react-native';
 const { width: screenWidth } = Dimensions.get('window');
 
 const getApiBaseUrl = () => {
-  if (Platform.OS === 'web') {
-    return 'http://localhost:5000/api';
-  }
-  return 'http://192.168.1.100:5000/api';
+  const isProd = true; // Set to false for local testing
+  return isProd
+    ? 'https://myntra-app-production.up.railway.app/api'
+    : 'http://192.168.1.100:5000/api';
 };
+
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();
