@@ -110,7 +110,11 @@ const startServer = async () => {
     console.log('✅ Connected to MongoDB');
 
     // Start server
-    const PORT = process.env.PORT || 8080;
+    const PORT = process.env.PORT;
+    if (!PORT) {
+      throw new Error("❌ Railway did not provide a PORT. Exiting.");
+    }
+
     const HOST = '0.0.0.0'; // Listen on all interfaces
     
     app.listen(PORT, HOST, () => {
@@ -126,7 +130,7 @@ const startServer = async () => {
     // If MongoDB connection fails, still start server for debugging
     if (error.name === 'MongoNetworkError' || error.name === 'MongooseServerSelectionError') {
       console.log('⚠️  Starting server without MongoDB connection for debugging...');
-      const PORT = process.env.PORT || 8080;
+      const PORT = process.env.PORT;
       const HOST = '0.0.0.0';
       
       app.listen(PORT, HOST, () => {
