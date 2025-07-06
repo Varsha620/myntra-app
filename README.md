@@ -5,7 +5,7 @@ A full-featured e-commerce mobile application built with React Native and Expo, 
 ## 🚀 Live Demo
 
 - **Backend API**: [https://myntra-app-production.up.railway.app](https://myntra-app-production.up.railway.app)
-- **Mobile App**: [Available via Expo Go or build APK]([https://expo.dev/accounts/varsha620/projects/bolt-expo-nativewind/builds/e37fcf0f-6503-4119-a2d5-3f4197dcdb14](https://expo.dev/accounts/varsha620/projects/bolt-expo-nativewind/builds/3c0dd331-f2bc-4a55-b11a-c8ee79263f80))
+- **Mobile App**: [Available via Expo Go or build APK](https://expo.dev/accounts/varsha620/projects/bolt-expo-nativewind/builds/3c0dd331-f2bc-4a55-b11a-c8ee79263f80)
 
 ## 📱 Tech Stack
 
