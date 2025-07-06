@@ -5,25 +5,24 @@ const config = getDefaultConfig(__dirname);
 // Ensure proper asset handling
 config.resolver.assetExts.push('db');
 
-// Add support for additional file types if needed
+// Add support for additional file types
 config.resolver.sourceExts.push('jsx', 'js', 'ts', 'tsx', 'json');
 
 // Ensure proper module resolution
 config.resolver.platforms = ['native', 'android', 'ios', 'web'];
 
-// Add resolver alias for better module resolution
-config.resolver.alias = {
-  '@': __dirname,
-};
-
-// Optimize for production builds
-if (process.env.NODE_ENV === 'production') {
-  config.transformer.minifierConfig = {
+// Transformer configuration for better compatibility
+config.transformer = {
+  ...config.transformer,
+  minifierConfig: {
     keep_fnames: true,
     mangle: {
       keep_fnames: true,
     },
-  };
-}
+  },
+};
+
+// Fix for React Native 0.79+ compatibility
+config.resolver.unstable_enablePackageExports = false;
 
 module.exports = config;
