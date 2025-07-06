@@ -9,11 +9,13 @@ import { View, Text, ActivityIndicator, Platform } from 'react-native';
 import { ErrorBoundary } from 'react-error-boundary';
 
 // Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync().catch(() => {
-  // Handle the error if splash screen is already hidden
+SplashScreen.preventAutoHideAsync().catch((error) => {
+  console.warn('SplashScreen.preventAutoHideAsync error:', error);
 });
 
 function ErrorFallback({ error, resetErrorBoundary }: any) {
+  console.error('App Error:', error);
+  
   return (
     <View style={{ 
       flex: 1, 
@@ -68,11 +70,18 @@ export default function RootLayout() {
   useEffect(() => {
     async function prepare() {
       try {
+        console.log('App preparation started');
+        
         // Wait for fonts to load
         if (fontsLoaded || fontError) {
+          if (fontError) {
+            console.warn('Font loading error:', fontError);
+          }
+          
           // Add a small delay to ensure everything is ready
           await new Promise(resolve => setTimeout(resolve, 100));
           setAppIsReady(true);
+          console.log('App preparation completed');
         }
       } catch (e) {
         console.warn('Error during app preparation:', e);
@@ -86,8 +95,8 @@ export default function RootLayout() {
   useEffect(() => {
     if (appIsReady) {
       // Hide the splash screen after the app is ready
-      SplashScreen.hideAsync().catch(() => {
-        // Handle the error if splash screen is already hidden
+      SplashScreen.hideAsync().catch((error) => {
+        console.warn('SplashScreen.hideAsync error:', error);
       });
     }
   }, [appIsReady]);
@@ -124,7 +133,12 @@ export default function RootLayout() {
   }
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <ErrorBoundary 
+      FallbackComponent={ErrorFallback}
+      onError={(error, errorInfo) => {
+        console.error('ErrorBoundary caught an error:', error, errorInfo);
+      }}
+    >
       <AuthProvider>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(auth)" />
