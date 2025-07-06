@@ -4,8 +4,7 @@
   "description": "Backend API for Myntra Clone mobile app",
   "main": "server.js",
   "scripts": {
-    "seed": "node scripts/seedData.js",
-    "start": "node server.js",
+    "start": "node scripts/seedData.js",
     "dev": "nodemon server.js"
   },
   "dependencies": {
