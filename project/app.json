@@ -19,16 +19,11 @@
         "backgroundColor": "#E91E63"
       },
       "package": "com.myntraclone.app",
-      "versionCode": 3,
       "permissions": [
         "INTERNET",
-        "ACCESS_NETWORK_STATE",
-        "WRITE_EXTERNAL_STORAGE",
-        "READ_EXTERNAL_STORAGE"
+        "ACCESS_NETWORK_STATE"
       ],
-      "allowBackup": false,
-      "enableProguardInReleaseBuilds": false,
-      "enableHermes": true
+      "allowBackup": false
     },
     "web": {
       "bundler": "metro",

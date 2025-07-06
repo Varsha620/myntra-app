@@ -16,14 +16,22 @@ config.resolver.alias = {
   '@': __dirname,
 };
 
-// Optimize for production builds
-if (process.env.NODE_ENV === 'production') {
-  config.transformer.minifierConfig = {
+// Transformer configuration for better compatibility
+config.transformer = {
+  ...config.transformer,
+  babelTransformerPath: require.resolve('metro-react-native-babel-transformer'),
+  minifierConfig: {
     keep_fnames: true,
     mangle: {
       keep_fnames: true,
     },
-  };
-}
+  },
+};
+
+// Serializer configuration
+config.serializer = {
+  ...config.serializer,
+  customSerializer: null,
+};
 
 module.exports = config;
