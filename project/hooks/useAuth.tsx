@@ -43,22 +43,23 @@ if (Platform.OS !== 'web') {
       getItem: async (key: string) => {
         try {
           return await SecureStore.getItemAsync(key);
-        } catch {
+        } catch (error) {
+          console.warn('SecureStore getItem error:', error);
           return null;
         }
       },
       setItem: async (key: string, value: string) => {
         try {
           await SecureStore.setItemAsync(key, value);
-        } catch {
-          // Ignore storage errors
+        } catch (error) {
+          console.warn('SecureStore setItem error:', error);
         }
       },
       deleteItem: async (key: string) => {
         try {
           await SecureStore.deleteItemAsync(key);
-        } catch {
-          // Ignore storage errors
+        } catch (error) {
+          console.warn('SecureStore deleteItem error:', error);
         }
       },
     };
@@ -151,7 +152,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await storage.deleteItem('auth_token');
         setUser(null);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('❌ Error loading stored auth:', err);
       try {
         await storage.deleteItem('auth_token');
